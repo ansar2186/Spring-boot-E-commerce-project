@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
+    <title>Shopeme Admin control panel</title>
+    <link rel="stylesheet" type="text/css"
+          th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/fontawesome/all.css} "/>
+    <link rel="stylesheet" type="text/css" th:href="@{/style.css} "/>
+    <!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css" integrity="sha384-NvKbDTEnL+A8F/AA5Tc5kmMLSJHUO868P+lDtTpJIeQdGYaUIuLr4lVGOEA1OcMy" crossorigin="anonymous">-->
+    <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+    <script type="text/javascript"
+            th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+        <a class="navbar-brand" th:href="@{/}"> <img
+                th:src="@{/images/ShopmeAdminSmall.png}">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#topNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="topNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" th:href="@{/users}">Users</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        th:href="@{/categories}">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/brand}">Brand</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/product}">Product</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        th:href="@{/customers}">Customers</a></li>
+                <li class="nav-item"><a class="nav-link"
+                                        th:href="@{/shippings}">Shipping</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/order}">Order</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/report}">Sale
+                    Report</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/artical}">Artical</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/menus}">Menus</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/setting}">Setting</a></li>
+
+            </ul>
+        </div>
+
+    </nav>
+    <div>
+        <h2>Manage user here !!</h2>
+        <a th:href="@{/users/new}">Create New User</a>
+        <div th:if="${message !=null}" class="alert alert-success text-center">[[${message}]]</div>
+    </div>
+    <div>
+        <form th:action="@{/users/page/1}" class="form-inline m-3">
+            Filter:&nbsp;
+            <input type="hidden" name="sortFiled" th:value="${sortFiled}"/>
+            <input type="hidden" name="sortDir" th:value="${sortDir}"/>
+            <input type="search" name="keyWord" th:value="${keyWord}" class="form-control" required/> &nbsp;&nbsp;
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i>
+            </button>
+            &nbsp;&nbsp;
+
+            <button type="button" class="btn btn-secondary" onclick="clearFilter()">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </form>
+
+    </div>
+    <div>
+        <table
+                class="table table-bordered table-striped table-hover table-responsive-xl">
+            <thead class="thead-dark">
+            <tr>
+                <th>
+                    User ID
+                </th>
+                <th>Photo</th>
+                <th>Email</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Enabled</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${listUsers}">
+                <td>[[${user.id}]]</td>
+                <!-- <td><i class="fa-solid fa-image-portrait fa-3x icon-silver"></i></td>-->
+                <td>
+                   <span th:if="${user.photo == null}"
+                         class="fas fa-portrait fa-3x icon-silver"></span> <img
+                        th:if="${user.photo != null}" th:src="@{${user.photosImagePath}}"
+                        style="width: 100px"/>
+
+                </td>
+                <!--<td>
+                   <span th:if="${user.photo ==null}" class="fa-solid fa-image-portrait fa-3x icon-silver"></span>
+                    <img th:if="${user.photo!=null}" th:src="@{${user.photoImagePath}}" />
+
+                </td>-->
+                <td>[[${user.email}]]</td>
+                <td>[[${user.firstName}]]</td>
+                <td>[[${user.lastName}]]</td>
+                <td>[[${user.roles}]]</td>
+                <td>
+                    <a th:if="${user.enabled == true}" class="fas fa-check-circle fa-2x icon-green"
+                       th:href="@{'/users/' +${user.id} +'/enabled/false'}" title="Disable this user"></a>
+                    <a th:if="${user.enabled == false}" class="fas fa-circle fa-2x icon-dark"
+                       th:href="@{'/users/' +${user.id} +'/enabled/true'}" title="Enabled this user"></a>
+                </td>
+                <td>
+                    <a class="fa-solid fa-pen-to-square fa-2x icon-green" th:href="@{'/users/edit/' +${user.id}}"
+                       title="Edit this user"></a> &nbsp;&nbsp;
+                    <a class="fa-solid fa-trash fa-2x icon-dark link-delete" th:href="@{'/users/delete/' +${user.id}}"
+                       title="Delete this user"></a>
+                </td>
+
+            </tr>
+
+            </tbody>
+
+        </table>
+    </div>
+    <div class="text-center m-1" th:if="${totalItems > 0}">
+        <span>Showing users #[[${startCount}]] to [[${endCount}]] of [[${totalItems}]]</span>
+    </div>
+    <div class="text-center m-1" th:unless="${totalItems > 0}">
+        <span>No User Found</span>
+    </div>
+    <div>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+
+                <li th:class="${currentPage>1 ? 'page-item' : 'page-item disabled'}"><a class="page-link"
+                                                                                        th:href="@{/users/page/1}">First</a>
+                </li>
+                <li th:class="${currentPage>1 ? 'page-item' : 'page-item disabled'}"><a class="page-link"
+                                                                                        th:href="@{'/users/page/' +${currentPage - 1}}">Previous</a>
+                </li>
+
+                <li th:class="${currentPage!=i ? 'page-item' :'page-item active'}"
+                    th:each="i:${#numbers.sequence(1,totalPages)}">
+
+                    <a class="page-link" th:href="@{'/users/page/' + ${i}}">[[${i}]]</a></li>
+
+                <li th:class="${currentPage <totalPages ? 'page-item' : 'page-item disabled'}"><a class="page-link"
+                                                                                                  th:href="@{'/users/page/' +${currentPage + 1}}">Next</a>
+                </li>
+                <li th:class="${currentPage <totalPages ? 'page-item' : 'page-item disabled'}"><a class="page-link"
+                                                                                                  th:href="@{'/users/page/' +${totalPages}}">Last</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<div class="text-center">
+    <p>Shopme Control Panel-Copyright &copy; Shopme</p>
+
+</div>
+<script type="text/javascript">
+ function clearFilter(){
+     window.location="/ShopmeAdmin/users"
+ }
+
+</script>
+
+</body>
+</html>
