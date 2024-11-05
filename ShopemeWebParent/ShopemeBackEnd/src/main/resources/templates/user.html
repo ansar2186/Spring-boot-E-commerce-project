@@ -50,6 +50,13 @@
     <div>
         <h2>Manage user here !!</h2>
         <a th:href="@{/users/new}">Create New User</a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/csv}">Export to CSV</a>
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/excel}">Export to Excel</a>
+
+        &nbsp;|&nbsp;
+        <a th:href="@{/users/export/pdf}">Export to PDF</a>
         <div th:if="${message !=null}" class="alert alert-success text-center">[[${message}]]</div>
     </div>
     <div>
@@ -164,9 +171,9 @@
 
 </div>
 <script type="text/javascript">
- function clearFilter(){
-     window.location="/ShopmeAdmin/users"
- }
+    function clearFilter(){
+        window.location="/ShopmeAdmin/users"
+    }
 
 </script>
 

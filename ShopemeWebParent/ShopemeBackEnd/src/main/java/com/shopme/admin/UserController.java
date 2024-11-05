@@ -8,6 +8,10 @@ import ch.qos.logback.core.util.StringUtil;
 import com.shopme.admin.exception.UserNotFoundException;
 import com.shopme.admin.service.impl.UserServiceImpl;
 import com.shopme.admin.util.FileUploadUtil;
+import com.shopme.admin.util.UserCsvExporter;
+import com.shopme.admin.util.UserExcelExporter;
+import com.shopme.admin.util.UserPdfExporter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -38,7 +42,7 @@ public class UserController {
     public String listFirstPage(Model model) {
 
         //return listByPage(0, model, "firstName", "asc", null);
-        return  listByPage(0,model,"firstName","asc",null);
+        return listByPage(0, model, "firstName", "asc", null);
         //return listByPage(0, model);
     }
 
@@ -141,6 +145,28 @@ public class UserController {
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/users";
 
+    }
+
+    //TIPOS DE EXPORTACION, CSV, EXCEL Y PDF
+    @GetMapping("/users/export/csv")
+    public void exportToCSV(HttpServletResponse response) throws IOException {
+        List<User> listUsers = userService.getAllUser();
+        UserCsvExporter exporter = new UserCsvExporter();
+        exporter.export(listUsers, response);
+    }
+
+    @GetMapping("/users/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        List<User> listUsers = userService.getAllUser();
+        UserExcelExporter exporter = new UserExcelExporter();
+        exporter.export(listUsers, response);
+    }
+
+    @GetMapping("/users/export/pdf")
+    public void exportToPdf(HttpServletResponse response) throws IOException {
+        List<User> listUsers = userService.getAllUser();
+        UserPdfExporter exporter = new UserPdfExporter();
+        exporter.export(listUsers, response);
     }
 
 }
