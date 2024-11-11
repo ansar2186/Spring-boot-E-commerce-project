@@ -1,6 +1,7 @@
 package com.shopme.admin.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.shopme.admin.exception.UserNotFoundException;
 import jakarta.transaction.Transactional;
@@ -108,5 +109,25 @@ public class UserServiceImpl implements UserService {
         // Pageable pageble = PageRequest.of(pageNumber, pageSize,sort);
         Pageable pageble = PageRequest.of(pageNumber, pageSize);
         return repository.findAll(pageble);
+    }
+
+    @Override
+    public User getUserName(String email) {
+        return repository.getUserByEmail(email);
+    }
+
+    @Override
+    public User updateAccount(User userInForm) {
+        User userInDB = repository.findById(userInForm.getId()).get();
+        if (!userInForm.getPassword().isEmpty()) {
+            userInDB.setPassword(passwordEncoder.encode(userInForm.getPassword()));
+        }
+        if (userInForm.getPhoto() != null) {
+            userInDB.setPhoto(userInForm.getPhoto());
+        }
+        userInDB.setFirstName(userInForm.getFirstName());
+        userInDB.setLastName(userInForm.getLastName()
+        );
+        return repository.saveAndFlush(userInDB);
     }
 }

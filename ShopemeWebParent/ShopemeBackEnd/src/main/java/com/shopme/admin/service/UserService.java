@@ -20,6 +20,11 @@ public interface UserService {
 
     public void updateUserEnabledStatus(Integer id, boolean enabled);
 
-    public Page<User> listByPage(int pageNumber,String sortFiledName,String sortDir,String keyWord);
+    public Page<User> listByPage(int pageNumber, String sortFiledName, String sortDir, String keyWord);
+
     public Page<User> listByPage(int pageNum);
+
+    User getUserName(String email);
+
+    public User updateAccount(User userInForm);
 }
