@@ -38,8 +38,9 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authenticationProvider(authenticationProvider());
         httpSecurity.authorizeHttpRequests(authorized -> {
-            authorized.requestMatchers("/users/**").hasAuthority("Admin");
-            authorized.anyRequest().authenticated();
+            authorized.requestMatchers("/users/**").hasAuthority("Admin")
+                    .requestMatchers("/categories/**").hasAnyAuthority("Admin", "Editor")
+                    .anyRequest().authenticated();
 
         });
         httpSecurity.formLogin(formLogin -> {
